@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.protrack"
-        minSdk = 21
+        minSdk = 23
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -52,6 +52,7 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.ui.test.android)
     val nav_version = "2.8.4"
 
     implementation(libs.androidx.core.ktx)
@@ -67,6 +68,7 @@ dependencies {
     testImplementation(libs.junit)
     // Jetpack Compose integration
     implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation("androidx.compose.material:material-icons-extended:1.7.6")
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -75,6 +77,8 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.firebase:firebase-firestore:25.1.1")
 
 
 }

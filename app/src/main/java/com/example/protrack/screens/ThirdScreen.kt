@@ -1,254 +1,205 @@
 package com.example.protrack.screens
 
 
+import android.icu.text.SimpleDateFormat
+import android.icu.util.Calendar
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.requiredWidth
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Brightness4
+import androidx.compose.material.icons.filled.Brightness7
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SmallFloatingActionButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.em
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import com.example.protrack.R
-import com.example.protrack.navigation.AppNavigation
+import com.example.protrack.navigation.AppScreen
+import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Locale
 
 
+
+@RequiresApi(Build.VERSION_CODES.N)
 @Composable
 fun ThridScreen(navController: NavController) {
+    val currentMonth = getCurrentMonth() // Mes actual en formato MM/YYYY
+    val earnings = remember { mutableStateOf(0f) } // Ganancias totales del mes
+
+
+
+    // Cargo las ganancias del mes actual desde Firebase
+    LaunchedEffect(Unit) {
+        //Ejecuto el bloque composable
+        fetchEarningsForCurrentMonth(currentMonth) { total ->
+            //se ingresa y se se calcula o recupera y se actualiza el estado.
+            earnings.value = total
+        }
+    }
+
     Box(
         modifier = Modifier
-            .requiredWidth(width = 412.dp)
-            .requiredHeight(height = 917.dp)
-            .background(color = Color(0xffc8c8af))
+            .fillMaxSize()
+            .background(Color(0xffc8c8af))
     ) {
-        ElevatedButton(
-            onClick = {
-
-            },
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffe8def8)),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
-            modifier = Modifier
-                .align(alignment = Alignment.TopStart)
-                .offset(x = 39.dp,
-                    y = 710.dp)
-                .requiredWidth(width = 335.dp)
-                .requiredHeight(height = 71.dp)
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .requiredWidth(width = 335.dp)
-                    .requiredHeight(height = 71.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color(0xff4a4459).copy(alpha = 0.08f))
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .requiredWidth(width = 335.dp)
-                            .requiredHeight(height = 71.dp)
-                            .padding(start = 16.dp,
-                                end = 20.dp,
-                                top = 16.dp,
-                                bottom = 16.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.icon_mod),
-                            contentDescription = "Icon",
-                            tint = Color(0xff4a4459),
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "Modificar",
-                            color = Color(0xff4a4459),
-                            textAlign = TextAlign.Center,
-                            lineHeight = 1.43.em,
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier
-                                .wrapContentHeight(align = Alignment.CenterVertically))
-                    }
-
-                }
-            }
-        }
-        ElevatedButton(
-            onClick = {
-
-            },
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffe8def8)),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
-            modifier = Modifier
-                .align(alignment = Alignment.TopStart)
-                .offset(x = 39.dp,
-                    y = 585.dp)
-                .requiredWidth(width = 335.dp)
-                .requiredHeight(height = 79.dp)
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .requiredWidth(width = 335.dp)
-                    .requiredHeight(height = 79.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color(0xff4a4459).copy(alpha = 0.08f))
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .requiredWidth(width = 335.dp)
-                            .requiredHeight(height = 79.dp)
-                            .padding(start = 16.dp,
-                                end = 20.dp,
-                                top = 16.dp,
-                                bottom = 16.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.icon_calend),
-                            contentDescription = "Icon",
-                            tint = Color(0xff4a4459),
-                            modifier = Modifier.size(24.dp)
-                        )
-                        Text(
-                            text = "Calendario",
-                            color = Color(0xff4a4459),
-                            textAlign = TextAlign.Center,
-                            lineHeight = 1.43.em,
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier
-                                .wrapContentHeight(align = Alignment.CenterVertically))
-                    }
-
-                }
-            }
-        }
-        ElevatedButton(
-            onClick = {
-
-            },
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xffe8def8)),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 5.dp),
-            modifier = Modifier
-                .align(alignment = Alignment.TopStart)
-                .offset(x = 40.dp,
-                    y = 477.dp)
-                .requiredWidth(width = 334.dp)
-                .requiredHeight(height = 75.dp)
-        ) {
-            Column(
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .requiredWidth(width = 334.dp)
-                    .requiredHeight(height = 75.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .background(color = Color(0xff4a4459).copy(alpha = 0.08f))
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier
-                            .requiredWidth(width = 334.dp)
-                            .requiredHeight(height = 75.dp)
-                            .padding(start = 16.dp,
-                                end = 20.dp,
-                                top = 16.dp,
-                                bottom = 16.dp)
-                    ) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.icon_clock),
-                            contentDescription = "Icon",
-                            tint = Color(0xff4a4459),
-                            modifier = Modifier.size(24.dp)
-
-                        )
-                        Text(
-                            text = "Ingresar Datos",
-                            color = Color(0xff4a4459),
-                            textAlign = TextAlign.Center,
-                            lineHeight = 1.43.em,
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier
-                                .wrapContentHeight(align = Alignment.CenterVertically)
-                        )
-                    }
-
-                }
-            }
-        }
+        // Encabezado
         Box(
             modifier = Modifier
-                .align(alignment = Alignment.TopStart)
-                .offset(x = (-2).dp,
-                        y = (-3).dp)
-                .padding(50.dp)
-                .requiredWidth(width = 414.dp)
-                .requiredHeight(height = 65.dp)
-                .background(color = Color(0xffd9d9d9))
-        )
-        Text(
-            text = "PROTRACK",
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            lineHeight = 1.43.em,
-            style = MaterialTheme.typography.labelLarge,
+                .fillMaxWidth()
+                .height(88.dp)
+                .padding(20.dp)
+        ) {
+            Spacer(modifier = Modifier.width(8.dp))
+            Text(
+                text = "PROTRACK",
+                color = Color.Black,
+                style = MaterialTheme.typography.labelLarge,
+                modifier = Modifier.align(Alignment.Center)
+            )
+        }
+
+        // Mostrar Ganancias Totales
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(24.dp),
             modifier = Modifier
-                .align(alignment = Alignment.TopStart)
-                .offset(x = 40.dp,
-                        y = 3.dp)
-                .padding(60.dp)
-                .requiredWidth(width = 209.dp)
-                .requiredHeight(height = 49.dp)
-                .wrapContentHeight(align = Alignment.CenterVertically))
+                .fillMaxWidth()
+                .padding(top = 120.dp)
+        ) {
+            Text(
+                text = "Ganancias del Mes: $currentMonth",
+                style = MaterialTheme.typography.headlineSmall,
+                color = Color.Black
+            )
+            Text(
+                text = "Total: €${earnings.value}",
+                style = MaterialTheme.typography.headlineMedium,
+                color = Color.Black
+            )
+        }
+
+        // Botones para navegar
+        Column(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .padding(bottom = 32.dp)
+        ) {
+            Button(
+                onClick = { navController.navigate(AppScreen.FourScreen.ruta) },
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text("Ingresar Datos")
+            }
+            Button(
+                onClick = { navController.navigate(AppScreen.FiveScreen.ruta) },
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text("Calendario")
+            }
+            Button(
+                onClick = { navController.navigate(AppScreen.SixScreen.ruta) },
+                modifier = Modifier.fillMaxWidth(0.8f)
+            ) {
+                Text("Modificar")
+            }
+        }
     }
 }
 
-@Preview(showBackground = true,
-    showSystemUi = true)
-@Composable
-fun ShowDefault(){
-    val navController = rememberNavController()
-    ThridScreen(navController = navController)
+// Funcion para obtener el mes actual
+@RequiresApi(Build.VERSION_CODES.N)
+fun getCurrentMonth(): String {
+    val calendar = Calendar.getInstance()
+    val month = (calendar.get(Calendar.MONTH) + 1).toString().padStart(2, '0')
+    val year = calendar.get(Calendar.YEAR).toString()
+    return "$month/$year"
 }
+
+// Funcion para obtener las ganancias del mes actual desde Firebase
+@RequiresApi(Build.VERSION_CODES.N)
+fun fetchEarningsForCurrentMonth(
+    currentMonth: String, //Mes actual
+    onEarningsFetched: (Float) -> Unit //Recibe el ingreso total
+) {
+    val db = FirebaseFirestore.getInstance() //conexion a la base de datos
+    db.collection("trabajo") //consulta
+        .get()// recupero todos los datos
+        .addOnSuccessListener { documents -> //Consulta exitosa
+            var totalEarnings = 0f //Variable para almacenar los ingresos totales
+
+            //recorro los datos de la base datos
+            for (document in documents) {
+                val date = document.getString("Fecha") //fechas en formato DD/MM/YYYY
+                val salary = document.getString("SalarioPorHora")?.toFloatOrNull() ?: 0f
+                val horaInicio = document.getString("HoraInicio")
+                val horaFin = document.getString("HoraFin")
+
+                //verifico si la fecha corresponde al mes actual
+                if (date != null && date.endsWith(currentMonth)) {
+
+                    //calculo las hora trabajas
+                    val hoursWorked = calculateHoursWorked(horaInicio, horaFin)
+                    //Sumo los ingresos al total
+                    totalEarnings += hoursWorked * salary
+                }
+            }
+            //llamo al callBack con los ingresos totales calculados
+            onEarningsFetched(totalEarnings)
+        }
+        .addOnFailureListener {
+            //Si hay un error, devuelvo el valor 0
+            onEarningsFetched(0f)
+        }
+}
+
+// Funcion para calcular las horas trabajadas a partir de dos cadenas de tiempo
+@RequiresApi(Build.VERSION_CODES.N)
+fun calculateHoursWorked(startTime: String?, endTime: String?): Float {
+    if (startTime == null || endTime == null) return 0f
+
+    val format = SimpleDateFormat("HH:mm", Locale.getDefault())
+    return try {
+        val start = format.parse(startTime)
+        val end = format.parse(endTime)
+        val difference = end.time - start.time
+        (difference / (1000 * 60 * 60)).toFloat() // Convertir a horas
+    } catch (e: Exception) {
+        0f
+    }
+}
+
+
+@RequiresApi(Build.VERSION_CODES.N)
+@Preview(showSystemUi = true, showBackground = true)
+@Composable
+fun defaultView(){
+    var navController = rememberNavController()
+    ThridScreen(navController)
+
+}
+
